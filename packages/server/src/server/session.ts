@@ -1934,6 +1934,10 @@ export class Session {
           return;
         }
 
+        if (event.type === "background_work") {
+          return;
+        }
+
         if (
           this.voiceSessions.isActiveForAgent(event.agentId) &&
           event.event.type === "permission_requested" &&

@@ -3878,6 +3878,15 @@ class ClaudeAgentSession implements AgentSession {
       if (await this.handleMissingResumedConversation(message, activeQuery)) {
         return true;
       }
+      // Retiring a query empties the background work list, but the retired query
+      // keeps draining what it had queued. Its task set died with its process.
+      if (
+        this.query !== activeQuery &&
+        message.type === "system" &&
+        message.subtype === "background_tasks_changed"
+      ) {
+        return false;
+      }
       await this.routeSdkMessageFromPump(message);
       return false;
     };
